@@ -253,6 +253,24 @@ void cylon(CRGB c, int width, int speed){
   }
 }
 
+// Continuously moving band of leds
+void swirly(CRGB c, int width, int speed){
+  // First slide the leds in one direction
+  for(int i = 0; i <= NUM_LEDS; i++) {
+    for(int j=0; j<width; j++){
+      leds[(i+j) % NUM_LEDS] = c;
+    }
+
+    FastLED.show();
+
+    // now that we've shown the leds, reset to black for next loop
+    for(int j=0; j<width; j++){
+      leds[(i+j) % width] = CRGB::Black;
+    }
+    delay(speed);
+  }
+}
+
 // Display alternating stripes
 void stripes(CRGB c1, CRGB c2, int width){
   for(int i=0; i<NUM_LEDS; i++){
