@@ -28,6 +28,7 @@ void theaterChaseRainbow(int cycles, int speed);
 void theaterChase(CRGB c, int cycles, int speed);
 void lightning(CRGB c, int simultaneous, int cycles, int speed);
 void cylon(CRGB c, int width, int speed);
+void swirly(CRGB c, int width, int speed);
 void stripes(CRGB c1, CRGB c2, int width);
 void disolve(int simultaneous, int cycles, int speed);
 void allRandom();
@@ -58,8 +59,12 @@ void loop() {
     delay(2000);
   }
 
-  for(int i=0; i<2; i++){
-    cylon(randomColor(), 10,FAST);
+  for(int i=0; i<5; i++){
+    cylon(randomColor(), 10, FAST);
+  }
+
+  for(int i=0; i<10; i++){
+    swirly(randomColor(), 5,FAST);
   }
 
 
@@ -233,7 +238,7 @@ void cylon(CRGB c, int width, int speed){
     FastLED.show();
 
     // now that we've shown the leds, reset to black for next loop
-    for(int j=0; j<5; j++){
+    for(int j=0; j<width; j++){
       leds[i+j] = CRGB::Black;
     }
     delay(speed);
@@ -265,7 +270,7 @@ void swirly(CRGB c, int width, int speed){
 
     // now that we've shown the leds, reset to black for next loop
     for(int j=0; j<width; j++){
-      leds[(i+j) % width] = CRGB::Black;
+      leds[(i+j) % NUM_LEDS] = CRGB::Black;
     }
     delay(speed);
   }
