@@ -7,7 +7,7 @@
 #define OLED_RESET  16
 
 // How many leds in your strip?
-#define NUM_LEDS 96
+#define NUM_LEDS 96 //96
 #define DATA_PIN 5
 #define FORWARD 0
 #define BACKWARD 1
@@ -28,7 +28,7 @@ void theaterChaseRainbow(int cycles, int speed);
 void theaterChase(CRGB c, int cycles, int speed);
 void lightning(CRGB c, int simultaneous, int cycles, int speed);
 void cylon(CRGB c, int width, int speed);
-void swirly(CRGB c, int width, int speed);
+void swirly(CRGB c, int width, int speed, bool reverse);
 void stripes(CRGB c1, CRGB c2, int width);
 void disolve(int simultaneous, int cycles, int speed);
 void allRandom();
@@ -43,7 +43,7 @@ void setup() {
 
 void loop() { 
 
-  rainbow(0,NULL);
+  rainbow(0,MEDIUM);
   delay(3000);
   colorWipe(CRGB::Black,FORWARD,FAST);
   allRandom();
@@ -64,9 +64,8 @@ void loop() {
   }
 
   for(int i=0; i<10; i++){
-    swirly(randomColor(), 5,FAST);
+    swirly(randomColor(), 5,FAST, false);
   }
-
 
   lightning(NULL,15,50,MEDIUM);
   lightning(CRGB::White,20,50,MEDIUM);
@@ -76,6 +75,10 @@ void loop() {
   }
 
   theaterChaseRainbow(1,MEDIUM);
+
+  for(int i=0; i<10; i++){
+    swirly(randomColor(), 5,MEDIUM, true);
+  }
 
   rainbow(FAST,1);
 
@@ -259,18 +262,24 @@ void cylon(CRGB c, int width, int speed){
 }
 
 // Continuously moving band of leds
-void swirly(CRGB c, int width, int speed){
+void swirly(CRGB c, int width, int speed, bool reverse){
   // First slide the leds in one direction
   for(int i = 0; i <= NUM_LEDS; i++) {
     for(int j=0; j<width; j++){
-      leds[(i+j) % NUM_LEDS] = c;
+      if(!reverse)
+        leds[(i+j) % NUM_LEDS] = c;
+      else
+        leds[(NUM_LEDS-1-i+j) % NUM_LEDS] = c;
     }
 
     FastLED.show();
 
     // now that we've shown the leds, reset to black for next loop
     for(int j=0; j<width; j++){
-      leds[(i+j) % NUM_LEDS] = CRGB::Black;
+      if(!reverse)
+        leds[(i+j) % NUM_LEDS] = CRGB::Black;
+      else
+        leds[(NUM_LEDS-1-i+j) % NUM_LEDS] = CRGB::Black;
     }
     delay(speed);
   }
